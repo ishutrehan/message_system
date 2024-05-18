@@ -1,0 +1,319 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model live_trades {
+  id                         Int       @id @default(autoincrement())
+  symbol                     String?   @db.VarChar(255)
+  entryPrice                 Float?    @db.Float
+  size                       Float?    @db.Float
+  createdAtE3                String?   @db.VarChar(19)
+  side                       String?   @db.VarChar(255)
+  leverageE2                 Float?    @db.Float
+  isIsolated                 Boolean?
+  transactTimeE3             String?   @db.VarChar(20)
+  stopLossPrice              String?   @db.VarChar(20)
+  takeProfitPrice            String?   @db.VarChar(20)
+  orderCostE8                String?   @db.VarChar(20)
+  reCalcEntryPrice           String?   @db.VarChar(20)
+  positionEntryPrice         String?   @db.VarChar(20)
+  positionCycleVersion       String?   @db.VarChar(20)
+  crossSeq                   String?   @db.VarChar(20)
+  closeFreeQtyX              String?   @db.VarChar(20)
+  minPositionCostE8          String?   @db.VarChar(20)
+  positionBalanceE8          Float?    @db.Float
+  traderID                   String?   @db.VarChar(255)
+  leaderFollowerCount        Int?
+  createdAt                  DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt                  DateTime? @default(now()) @db.Timestamp(0)
+  isClosed                   Boolean?  @default(false)
+  CummulativeSuccessCount    Int?
+  CummulativeFailureCount    Int?
+  PredictionValue            Int?
+  PredictionLabel            String?   @db.VarChar(30)
+  PredictionProbability      Float?    @db.Float
+  PredictionProcessingStatus Boolean?
+  TradeCummulationStatus     Int?      @default(0)
+  profit                     Boolean?
+  traderName                 String?   @db.VarChar(100)
+  closePrice                 Float?    @db.Float
+  closedTime                 DateTime? @db.Timestamp(0)
+  startTime                  DateTime? @db.DateTime(0)
+  closeStatus                String?   @db.VarChar(100)
+  EncoderStatus              String?   @db.VarChar(20)
+  isTradeExecuted            Int?      @default(0)
+
+  @@unique([traderID, size, crossSeq])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model master_traders {
+  id             Int     @id @default(autoincrement())
+  trader_id      String  @unique
+  follower_count Int     @default(0)
+  is_trade_open  Boolean @default(false)
+  trader_name    String? @db.VarChar(100)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model Metrics {
+  CalculationTime DateTime? @db.Timestamp(0)
+  MetricName      String?   @db.VarChar(30)
+  MetricValue     Float?    @db.Float
+
+  @@ignore
+}
+
+model closed_trades {
+  id                         Int       @id @default(autoincrement())
+  symbol                     String?   @db.VarChar(255)
+  entryPrice                 Float?    @db.Float
+  size                       Float?    @db.Float
+  createdAtE3                String?   @db.VarChar(19)
+  side                       String?   @db.VarChar(255)
+  leverageE2                 Float?    @db.Float
+  isIsolated                 Boolean?
+  transactTimeE3             String?   @db.VarChar(20)
+  stopLossPrice              String?   @db.VarChar(20)
+  takeProfitPrice            String?   @db.VarChar(20)
+  orderCostE8                String?   @db.VarChar(20)
+  reCalcEntryPrice           String?   @db.VarChar(20)
+  positionEntryPrice         String?   @db.VarChar(20)
+  positionCycleVersion       String?   @db.VarChar(20)
+  crossSeq                   String?   @db.VarChar(20)
+  closeFreeQtyX              String?   @db.VarChar(20)
+  minPositionCostE8          String?   @db.VarChar(20)
+  positionBalanceE8          Float?    @db.Float
+  traderID                   String?   @db.VarChar(255)
+  leaderFollowerCount        Int?
+  createdAt                  DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt                  DateTime? @default(now()) @db.Timestamp(0)
+  isClosed                   Boolean?  @default(false)
+  CummulativeSuccessCount    Int?
+  CummulativeFailureCount    Int?
+  PredictionValue            Int?
+  PredictionLabel            String?   @db.VarChar(30)
+  PredictionProbability      Float?    @db.Float
+  PredictionProcessingStatus Boolean?
+  TradeCummulationStatus     Int?
+  profit                     Boolean?
+  traderName                 String?   @db.VarChar(100)
+  closePrice                 Float?    @db.Float
+  closedTime                 DateTime? @db.Timestamp(0)
+  startTime                  DateTime? @db.DateTime(0)
+  closeStatus                String?   @db.VarChar(100)
+  EncoderStatus              String?   @db.VarChar(20)
+  isTradeExecuted            Int?      @default(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model temp_closed_trades {
+  id                         Int       @default(0)
+  symbol                     String?   @db.VarChar(255)
+  entryPrice                 Float?    @db.Float
+  size                       Float?    @db.Float
+  createdAtE3                String?   @db.VarChar(19)
+  side                       String?   @db.VarChar(255)
+  leverageE2                 Float?    @db.Float
+  isIsolated                 Boolean?
+  transactTimeE3             String?   @db.VarChar(20)
+  stopLossPrice              String?   @db.VarChar(20)
+  takeProfitPrice            String?   @db.VarChar(20)
+  orderCostE8                String?   @db.VarChar(20)
+  reCalcEntryPrice           String?   @db.VarChar(20)
+  positionEntryPrice         String?   @db.VarChar(20)
+  positionCycleVersion       String?   @db.VarChar(20)
+  crossSeq                   String?   @db.VarChar(20)
+  closeFreeQtyX              String?   @db.VarChar(20)
+  minPositionCostE8          String?   @db.VarChar(20)
+  positionBalanceE8          Float?    @db.Float
+  traderID                   String?   @db.VarChar(255)
+  leaderFollowerCount        Int?
+  createdAt                  DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt                  DateTime? @default(now()) @db.Timestamp(0)
+  isClosed                   Boolean?  @default(false)
+  CummulativeSuccessCount    Int?
+  CummulativeFailureCount    Int?
+  PredictionValue            Int?
+  PredictionLabel            String?   @db.VarChar(30)
+  PredictionProbability      Float?    @db.Float
+  PredictionProcessingStatus Boolean?
+  TradeCummulationStatus     Int?
+  profit                     Boolean?
+  traderName                 String?   @db.VarChar(100)
+  closePrice                 Float?    @db.Float
+  closedTime                 DateTime? @db.Timestamp(0)
+  startTime                  DateTime? @db.DateTime(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model CummulationStatus {
+  TraderID     String? @db.VarChar(300)
+  SuccessCount Int?
+  FailureCount Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model EncoderValues {
+  symbol  String? @db.VarChar(30)
+  version String? @db.VarChar(20)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model MetricMoving {
+  CalculationTime DateTime? @db.DateTime(0)
+  StartDate       DateTime? @db.Date
+  EndDate         DateTime? @db.Date
+  IntervalInDays  Int?
+  MetricName      String?   @db.VarChar(30)
+  MetricValue     Float?    @db.Float
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model MetricProbabilityAnalysis {
+  CalculationTime        DateTime? @db.Timestamp(0)
+  StartThreshold         Float?    @db.Float
+  EndThreshold           Float?    @db.Float
+  NumberOfTruePositives  Float?    @db.Float
+  NumberOfFalsePositives Float?    @db.Float
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ThresholdProbabilityMetric {
+  ClosedDate             DateTime? @db.Date
+  threshold              Float?    @db.Float
+  NumberOfTruePositives  Int?
+  NumberOfFalsePositives Int?
+  profit                 Float?    @db.Float
+  loss                   Float?    @db.Float
+  accuracy               Float?    @db.Float
+  FinalProfit            Float?    @db.Float
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model TraderHistory {
+  TraderId   String? @db.VarChar(300)
+  SuccessCum Int?
+  FailureCum Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model TraderIdMap {
+  ID      String? @db.VarChar(300)
+  Counter Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model TraderNameMap {
+  Name    String? @db.VarChar(300)
+  Counter Int?
+
+  @@ignore
+}
+
+model old_trades {
+  id                         Int       @id @default(autoincrement())
+  symbol                     String?   @db.VarChar(255)
+  entryPrice                 Float?    @db.Float
+  size                       Float?    @db.Float
+  createdAtE3                String?   @db.VarChar(19)
+  side                       String?   @db.VarChar(255)
+  leverageE2                 Float?    @db.Float
+  isIsolated                 Boolean?
+  transactTimeE3             String?   @db.VarChar(20)
+  stopLossPrice              String?   @db.VarChar(20)
+  takeProfitPrice            String?   @db.VarChar(20)
+  orderCostE8                String?   @db.VarChar(20)
+  reCalcEntryPrice           String?   @db.VarChar(20)
+  positionEntryPrice         String?   @db.VarChar(20)
+  positionCycleVersion       String?   @db.VarChar(20)
+  crossSeq                   String?   @db.VarChar(20)
+  closeFreeQtyX              String?   @db.VarChar(20)
+  minPositionCostE8          String?   @db.VarChar(20)
+  positionBalanceE8          Float?    @db.Float
+  traderID                   String?   @db.VarChar(255)
+  leaderFollowerCount        Int?
+  createdAt                  DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt                  DateTime? @default(now()) @db.Timestamp(0)
+  isClosed                   Boolean?  @default(false)
+  CummulativeSuccessCount    Int?
+  CummulativeFailureCount    Int?
+  PredictionValue            Int?
+  PredictionLabel            String?   @db.VarChar(30)
+  PredictionProbability      Float?    @db.Float
+  PredictionProcessingStatus Boolean?
+  TradeCummulationStatus     Int?
+  profit                     Boolean?
+  traderName                 String?   @db.VarChar(100)
+  closePrice                 Float?    @db.Float
+  closedTime                 DateTime? @db.Timestamp(0)
+  startTime                  DateTime? @db.DateTime(0)
+  closeStatus                String?   @db.VarChar(100)
+  EncoderStatus              String?   @db.VarChar(20)
+  isTradeExecuted            Int?      @default(0)
+  closedTimeE3               String?   @db.VarChar(20)
+}
+
+model old_trades_check {
+  id                         Int       @id @default(autoincrement())
+  symbol                     String?   @db.VarChar(255)
+  entryPrice                 Float?    @db.Float
+  size                       Float?    @db.Float
+  createdAtE3                String?   @db.VarChar(19)
+  side                       String?   @db.VarChar(255)
+  leverageE2                 Float?    @db.Float
+  isIsolated                 Boolean?
+  transactTimeE3             String?   @db.VarChar(20)
+  stopLossPrice              String?   @db.VarChar(20)
+  takeProfitPrice            String?   @db.VarChar(20)
+  orderCostE8                String?   @db.VarChar(20)
+  reCalcEntryPrice           String?   @db.VarChar(20)
+  positionEntryPrice         String?   @db.VarChar(20)
+  positionCycleVersion       String?   @db.VarChar(20)
+  crossSeq                   String?   @db.VarChar(20)
+  closeFreeQtyX              String?   @db.VarChar(20)
+  minPositionCostE8          String?   @db.VarChar(20)
+  positionBalanceE8          Float?    @db.Float
+  traderID                   String?   @db.VarChar(255)
+  leaderFollowerCount        Int?
+  createdAt                  DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt                  DateTime? @default(now()) @db.Timestamp(0)
+  isClosed                   Boolean?  @default(false)
+  CummulativeSuccessCount    Int?
+  CummulativeFailureCount    Int?
+  PredictionValue            Int?
+  PredictionLabel            String?   @db.VarChar(30)
+  PredictionProbability      Float?    @db.Float
+  PredictionProcessingStatus Boolean?
+  TradeCummulationStatus     Int?
+  profit                     Boolean?
+  traderName                 String?   @db.VarChar(100)
+  closePrice                 Float?    @db.Float
+  closedTime                 DateTime? @db.Timestamp(0)
+  startTime                  DateTime? @db.DateTime(0)
+  closeStatus                String?   @db.VarChar(100)
+  EncoderStatus              String?   @db.VarChar(20)
+  isTradeExecuted            Int?      @default(0)
+  closedTimeE3               String?   @db.VarChar(20)
+}
